@@ -1,0 +1,165 @@
+services:
+  postgres_db:
+    image: postgres:15
+    container_name: postgres_db
+    restart: always
+    env_file: .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - ${POSTGRES_PORT:-5432}:5432
+    networks:
+      - boilerplate
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: 
+      PGADMIN_DEFAULT_PASSWORD: 
+    ports:
+      - ${PGADMIN_PORT:-5050}:80
+    depends_on:
+      - postgres_db
+    networks:
+      - boilerplate
+
+  redis:
+    image: redis:7
+    container_name: redis
+    restart: always
+    ports:
+      - ${REDIS_PORT:-6379}:6379
+    networks:
+      - boilerplate
+
+  django:
+    build:
+      context: ./backend
+    container_name: django
+    volumes:
+      - ./backend/api:/app/api
+      - ./backend/core:/app/core
+      - ./backend/staticfiles:/app/staticfiles
+      - ./backend/entrypoint.sh:/app/entrypoint.sh
+      - ./backend/manage.py:/app/manage.py
+      - ./backend/pyproject.toml:/app/pyproject.toml
+      - ./backend/pytest.ini:/app/pytest.ini
+      - ./backend/uv.lock:/app/uv.lock
+      - ./media:/app/media
+      - ./logs:/app/logs
+      - ./browser_token:/app/browser_token
+    env_file: .env
+    depends_on:
+      - postgres_db
+      - redis
+    networks:
+      - boilerplate
+
+  celery:
+    build:
+      context: ./backend
+    container_name: celery
+    command: uv run celery -A core worker --loglevel=info
+    volumes:
+      - ./backend/api:/app/api
+      - ./backend/core:/app/core
+      - ./backend/staticfiles:/app/staticfiles
+      - ./backend/entrypoint.sh:/app/entrypoint.sh
+      - ./backend/manage.py:/app/manage.py
+      - ./backend/pyproject.toml:/app/pyproject.toml
+      - ./backend/pytest.ini:/app/pytest.ini
+      - ./backend/uv.lock:/app/uv.lock
+      - ./media:/app/media
+      - ./logs:/app/logs
+    env_file: .env
+    depends_on:
+      - django
+      - redis
+      - postgres_db
+    networks:
+      - boilerplate
+
+  celery-beat:
+    build:
+      context: ./backend
+    container_name: celery-beat
+    command: uv run celery -A core beat --loglevel=info
+    volumes:
+      - ./backend/api:/app/api
+      - ./backend/core:/app/core
+      - ./backend/staticfiles:/app/staticfiles
+      - ./backend/entrypoint.sh:/app/entrypoint.sh
+      - ./backend/manage.py:/app/manage.py
+      - ./backend/pyproject.toml:/app/pyproject.toml
+      - ./backend/pytest.ini:/app/pytest.ini
+      - ./backend/uv.lock:/app/uv.lock
+      - ./media:/app/media
+      - ./logs:/app/logs
+    env_file: .env
+    depends_on:
+      - django
+      - redis
+      - postgres_db
+    networks:
+      - boilerplate
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+      - ${NGINX_PORT:-8080}:80
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./backend/staticfiles:/app/staticfiles
+      - ./media:/app/media
+    depends_on:
+      - django
+      - celery
+      - celery-beat
+    networks:
+      - boilerplate
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        API_URL: ${API_URL}
+        API_TOKEN: ${API_TOKEN}
+    container_name: frontend
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/static:/app/static
+      - ./frontend/package.json:/app/package.json
+      - ./frontend/pnpm-lock.yaml:/app/pnpm-lock.yaml
+      - ./frontend/pnpm-workspace.yaml:/app/pnpm-workspace.yaml
+      - ./frontend/svelte.config.js:/app/svelte.config.js
+      - ./frontend/tsconfig.json:/app/tsconfig.json
+      - ./frontend/vite.config.js:/app/vite.config.js
+    ports:
+      - ${SVELTEKIT_PORT:-5173}:5173
+    env_file:
+    - .env
+    networks:
+      - boilerplate
+
+  portainer:
+    image: portainer/portainer-ce
+    container_name: portainer
+    restart: always
+    env_file: .env
+    ports:
+      - ${PORTAINER_PORT:-9000}:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+
+volumes:
+  postgres_data:
+  portainer_data:
+  logs:
+
+networks:
+  boilerplate:
+    driver: bridge
