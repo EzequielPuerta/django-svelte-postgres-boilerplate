@@ -89,7 +89,7 @@ DJANGO_DEBUG='True'
 DJANGO_ALLOWED_HOSTS='*'
 # Nombre, email y contraseña del superusuario del módulo de administración
 DJANGO_SUPERUSER_USERNAME=adminuser
-DJANGO_SUPERUSER_EMAIL=adminuser@fund.ar
+DJANGO_SUPERUSER_EMAIL=adminuser@gmail.com
 DJANGO_SUPERUSER_PASSWORD=adminpass
 # Nombre y contraseña del usuario que utilizará el cliente Svelte
 BROWSER_USERNAME=browser
@@ -114,7 +114,7 @@ POSTGRES_PORT=5432
 # credenciales y en el primer uso nos pedirá configurar un server Postgres.
 # Utilizaremos para ello los datos de la categoría anterior.
 PGADMIN_PORT=5050
-PGADMIN_DEFAULT_EMAIL=adminuser@fund.ar
+PGADMIN_DEFAULT_EMAIL=adminuser@gmail.com
 PGADMIN_DEFAULT_PASSWORD=adminpass
 
 # Configuración para Redis, broker utilizado por Celery
