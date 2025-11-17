@@ -1,0 +1,80 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+    -   id: trailing-whitespace
+        files: ^backend/
+        exclude: ^backend/(staticfiles|.*/migrations)/
+    -   id: end-of-file-fixer
+        files: ^backend/
+        exclude: ^backend/(staticfiles|.*/migrations)/
+    -   id: check-yaml
+        files: ^backend/
+        exclude: ^backend/(staticfiles|.*/migrations)/
+    -   id: check-added-large-files
+        files: ^backend/
+        exclude: ^backend/(staticfiles|.*/migrations)/
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.7.0
+    hooks:
+    -   id: ruff
+        args: ["--fix"]
+        files: ^backend/
+        exclude: ^backend/(staticfiles|.*/migrations)/
+    -   id: ruff-format
+        files: ^backend/
+        exclude: ^backend/(staticfiles|.*/migrations)/
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.13.0
+    hooks:
+    -   id: mypy
+        additional_dependencies:
+          - celery
+          - django
+          - django-cors-headers
+          - django-stubs
+          - djangorestframework
+          - drf-spectacular
+          - loguru
+          - psycopg2-binary
+          - python-dotenv
+          - djangorestframework-stubs
+        files: ^backend/
+        exclude: ^backend/(staticfiles|.*/migrations)/
+        pass_filenames: false
+        entry: bash -c "cd backend && mypy --config-file=pyproject.toml ."
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: "v3.1.0"
+    hooks:
+      - id: prettier
+        types_or: [javascript, jsx, ts, tsx, json, css, scss, html, svelte]
+        files: ^frontend/src/
+        args: ["--write"]
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v9.14.0
+    hooks:
+      - id: eslint
+        files: ^frontend/src/
+        types_or: [javascript, jsx, ts, tsx, svelte]
+        additional_dependencies:
+          - eslint
+          - eslint-plugin-svelte
+          - eslint-plugin-import
+          - eslint-config-prettier
+          - "@typescript-eslint/parser"
+          - "@typescript-eslint/eslint-plugin"
+        args: ["--fix", "--config", "frontend/eslint.config.js"]
+  - repo: local
+    hooks:
+      - id: svelte-check
+        name: svelte-check
+        entry: npx svelte-check --fail-on-warnings
+        language: system
+        files: ^frontend/src/
+  - repo: local
+    hooks:
+      - id: sort-package-json
+        name: sort package.json
+        entry: npx sort-package-json
+        language: system
+        files: ^frontend/package.json$

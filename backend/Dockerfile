@@ -16,7 +16,7 @@ ENV PATH="/root/.local/bin:$PATH"
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev
 COPY entrypoint.sh .
-RUN chmod +x entrypoint.sh
+RUN chmod 755 entrypoint.sh
 
 EXPOSE 8000
-CMD ["./entrypoint.sh"]
+CMD ["sh", "./entrypoint.sh"]

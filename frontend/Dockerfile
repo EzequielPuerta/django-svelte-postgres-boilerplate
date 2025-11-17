@@ -7,7 +7,7 @@ ENV API_URL=$API_URL
 ARG API_TOKEN
 ENV API_TOKEN=$API_TOKEN
 
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY package.json pnpm-lock.yaml ./
 
 RUN npm install -g pnpm
 RUN pnpm install

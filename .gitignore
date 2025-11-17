@@ -35,4 +35,4 @@ vite.config.ts.timestamp-*
 
 /browser_token
 /media
-/logs
+logs

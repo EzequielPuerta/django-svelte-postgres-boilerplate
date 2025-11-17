@@ -35,7 +35,7 @@ Template básico que permite cargar archivos (con límite de 10Mb) mediante el p
 - **SvelteKit:**
   - Consumo de la *API DRF*.
   - Manejo de token de autenticación mediante *env-vars server-side*.
-  
+
 ### Logging y administración de contenedores
 
 - **Portainer**
@@ -55,11 +55,15 @@ Template básico que permite cargar archivos (con límite de 10Mb) mediante el p
 ## Primeros pasos
 
 ```bash
-cp .env.sample .env         # Editar el archivo con las variables deseadas
+cp .env.sample .env           # Editar el archivo con las variables deseadas
+pre-commit install            # Instala el hook de pre-commit
+pre-commit run --all-files    # Si se requiere ejecutar el pre-commit manualmente
 cd backend
-uv sync                     # Instala dependencias Python en el entorno virtual
-cd ..
-docker compose up --build   # -d opcional, para correrlo en background
+uv sync                       # Instala dependencias Python en el entorno virtual
+cd ../frontend
+pnpm install                  # Instala dependencias de Svelte
+pnpm run dev                  # Crea la carpeta frontend/.svelte-kit y levanta el server dev
+docker compose up --build     # -d opcional, para correrlo en background
 ```
 
 ## Variables de entorno
@@ -146,7 +150,7 @@ boilerplate
 |  |  |_ tests.py             # tests de modelos relacionados con la actual aplicación DRF
 |  |  |_ urls.py              # acceso al servicio mediante la api DRF
 |  |  |_ views.py             # vista del servicio en la api DRF
-|  |_ core      
+|  |_ core
 |  |  |_ __init__.py          # configuración del servicio Celery
 |  |  |_ celery.py            # configuración del servicio Celery
 |  |  |_ compression.py       # utilidades usadas por la tarea async de compresión
@@ -154,7 +158,7 @@ boilerplate
 |  |  |_ logger_config.py     # configuración del loguru para handlear logs de logging
 |  |  |_ settings.py          # configuración general de Django
 |  |  |_ urls.py              # urls expuestas (Django Admin + Apps DRF)
-|  |_ staticfiles     
+|  |_ staticfiles
 |  |  |_ ...                  # contiene los archivos estáticos del Django Admin y DRF, servidos por Nginx
 |  |_ .dockerignore           # ignores específicos para la generación del contenedor 'backend'
 |  |_ Dockerfile              # construcción del contenedor 'backend'
@@ -186,41 +190,42 @@ boilerplate
 |_ README.md                  # éste archivo
 ```
 
-## Accesos por defecto:
+## Accesos por defecto
 
 - Django:
-  - App: http://localhost:8000
+  - App: <http://localhost:8000>
+
 > Con *debugger* activo en *development*
   ![Django Debug](docs/django-debug.png)
 
 > Con *debugger* desactivado en *producción*
   ![Django Debug Prod](docs/django-prod.png)
 
-> Se podría redireccionar la URL al frontend 
+> Se podría redireccionar la URL al frontend
 
-  - Admin: http://localhost:8000/admin/
+- Admin: <http://localhost:8000/admin/>
   ![Django Admin](docs/admin.png)
 
-  - Api DRF: http://localhost:8000/api/
+- Api DRF: <http://localhost:8000/api/>
   ![Django DRF](docs/drf.png)
 
 - SvelteKit:
-  - Front: http://localhost:5173
+  - Front: <http://localhost:5173>
   ![Frontend SvelteKit](docs/frontend-svelte.png)
 
 - Docs:
-  - Swagger: UI: http://localhost:8000/api/docs/swagger/
+  - Swagger: UI: <http://localhost:8000/api/docs/swagger/>
   ![Docs Swagger](docs/docs-swagger.png)
 
-  - Redoc: http://localhost:8000/api/docs/redoc/
+  - Redoc: <http://localhost:8000/api/docs/redoc/>
   ![Docs Redoc](docs/docs-redoc.png)
 
-- Portainer: http://localhost:9000/#!/init/admin
+- Portainer: <http://localhost:9000/#!/init/admin>
   - tiene timeout, asi que hay que acceder rápido o reiniciar su contenedor
   - crear usuario y contraseña y guardarlo en algún lugar seguro
   ![Portainer](docs/portainer-stack.png)
 
-- Postgres - PgAdmin: http://localhost:5050
+- Postgres - PgAdmin: <http://localhost:5050>
   - Configurar un server con los datos de postgresql del .env:
   ![PgAdmin](docs/pgadmin-select.png)
 

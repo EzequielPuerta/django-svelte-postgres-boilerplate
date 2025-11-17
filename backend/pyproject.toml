@@ -1,20 +1,124 @@
 [project]
 name = "backend"
 version = "0.1.0"
-description = "Add your description here"
+description = "Django backend for fullstack projects"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "celery>=5.2.7",
     "django>=3.2.25",
     "django-cors-headers>=4.1.0",
+    "django-stubs>=5.2.7",
     "djangorestframework>=3.15.1",
     "drf-spectacular>=0.28.0",
     "gunicorn>=23.0.0",
     "loguru>=0.7.3",
+    "mypy-extensions>=1.1.0",
     "psycopg2-binary>=2.9.9",
-    "pytest>=8.4.2",
-    "pytest-django>=4.11.1",
     "python-dotenv>=0.21.1",
     "redis>=5.0.8",
 ]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.18.2",
+    "pre-commit>=4.4.0",
+    "pytest>=8.4.2",
+    "pytest-cov>=7.0.0",
+    "pytest-django>=4.11.1",
+    "ruff>=0.14.5",
+]
+
+#############################################
+#                 RUFF
+#############################################
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+extend-exclude = [
+    "migrations",
+    "backend/staticfiles",
+    "frontend",
+]
+
+# Esto activa reglas equivalentes a flake8, isort, pyupgrade,
+# bugs típicos y mejores prácticas.
+lint.select = [
+    "E",   # errores estilo
+    "F",   # errores de flake8
+    "I",   # orden de imports (isort)
+    "B",   # bugbear
+    "UP",  # pyupgrade
+    "C4",  # comprehensions
+    "W",   # warnings
+]
+
+lint.ignore = [
+    "E203",  # compatibilidad con estilo Black
+    "E501",
+]
+
+#############################################
+#                 RUFF ISORT
+#############################################
+[tool.ruff.lint.isort]
+combine-as-imports = true
+known-first-party = ["core"]
+force-single-line = false
+
+#############################################
+#                 RUFF FORMAT
+#############################################
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+
+#############################################
+#            PYTEST + DJANGO
+#############################################
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "core.settings"
+python_files = ["tests.py", "test_*.py", "*_test.py"]
+addopts = "-ra --cov=. --cov-report=term-missing"
+
+#############################################
+#                COVERAGE
+#############################################
+[tool.coverage.run]
+branch = true
+source = ["."]
+omit = [
+    "*/migrations/*",
+    "*/__init__.py"
+]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+
+#############################################
+#                 MYPY
+#############################################
+[tool.mypy]
+python_version = "3.11"
+plugins = ["mypy_django_plugin.main"]
+strict = false
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_return_any = true
+disallow_any_generics = true
+check_untyped_defs = true
+no_implicit_reexport = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+ignore_errors = true
+
+#############################################
+#            Django MyPy plugin
+#############################################
+[tool.django-stubs]
+django_settings_module = "core.settings"

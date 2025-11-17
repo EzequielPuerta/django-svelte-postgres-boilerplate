@@ -1,8 +1,8 @@
 import base64
 import zlib
-from typing import Union
 
-def compress_content(content: Union[str, bytes]) -> str:
+
+def compress_content(content: str | bytes) -> str:
     if isinstance(content, str):
         content = content.encode("utf-8")
     compressed = zlib.compress(content)

@@ -1,15 +1,18 @@
-import sys
 import logging
+import sys
+from logging import LogRecord
 from pathlib import Path
+
 from loguru import logger
 
 
 class InterceptHandler(logging.Handler):
-    def emit(self, record):
+    def emit(self, record: LogRecord) -> None:
         logger_opt = logger.opt(depth=6, exception=record.exc_info)
         logger_opt.log(record.levelname, record.getMessage())
 
-def setup_logging(base_dir: Path):
+
+def setup_logging(base_dir: Path) -> None:
     logger.remove()
     logger.add(sys.stdout, level="DEBUG", colorize=True)
     logger.add(
