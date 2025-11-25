@@ -60,6 +60,8 @@ services:
   celery:
     build:
       context: ./backend
+      cache_from:
+        - django
     container_name: celery
     command: uv run celery -A core worker --loglevel=info
     volumes:
@@ -84,6 +86,8 @@ services:
   celery-beat:
     build:
       context: ./backend
+      cache_from:
+        - django
     container_name: celery-beat
     command: uv run celery -A core beat --loglevel=info
     volumes:

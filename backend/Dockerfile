@@ -10,8 +10,11 @@ RUN apt-get update && apt-get install -y \
     gcc libpq-dev curl && \
     rm -rf /var/lib/apt/lists/*
 
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 ENV PATH="/root/.local/bin:$PATH"
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
+    ls -lah /root/.local/bin && \
+    which uv && \
+    uv --version
 
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev
