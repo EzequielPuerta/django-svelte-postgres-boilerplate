@@ -68,8 +68,11 @@ repos:
     hooks:
       - id: svelte-check
         name: svelte-check
-        entry: npx svelte-check --fail-on-warnings
         language: system
+        entry: bash -c "
+          cd frontend &&
+          pnpm install --frozen-lockfile &&
+          NODE_OPTIONS='--require dotenv/config' pnpm exec svelte-check --fail-on-warnings"
         files: ^frontend/src/
   - repo: local
     hooks:
@@ -78,3 +81,28 @@ repos:
         entry: npx sort-package-json
         language: system
         files: ^frontend/package.json$
+  - repo: local
+    hooks:
+    - id: run-pytest
+      name: Run pytest
+      additional_dependencies:
+        - celery
+        - django
+        - django-cors-headers
+        - django-stubs
+        - djangorestframework
+        - drf-spectacular
+        - loguru
+        - psycopg2-binary
+        - python-dotenv
+        - djangorestframework-stubs
+        - pytest
+        - pytest-cov
+        - pytest-django
+      entry: bash -c "
+        cd backend &&
+        pytest -c pyproject.toml --maxfail=1 --disable-warnings"
+      language: python
+      files: ^backend/
+      always_run: true
+      pass_filenames: false

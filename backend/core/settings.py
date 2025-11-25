@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 import os
+import sys
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -121,16 +122,24 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "core.wsgi.application"
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "HOST": os.getenv("POSTGRES_HOST"),
-        "NAME": os.getenv("POSTGRES_DB"),
-        "USER": os.getenv("POSTGRES_USER"),
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-        "PORT": os.getenv("POSTGRES_PORT"),
+if "pytest" in sys.argv[0]:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": ":memory:",
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "HOST": str(os.getenv("POSTGRES_HOST")),
+            "NAME": str(os.getenv("POSTGRES_DB")),
+            "USER": str(os.getenv("POSTGRES_USER")),
+            "PASSWORD": str(os.getenv("POSTGRES_PASSWORD")),
+            "PORT": str(os.getenv("POSTGRES_PORT")),
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -160,8 +169,13 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 MAX_UPLOAD_SIZE = 10 * 1024 * 1024  # 10 MB
 
-CELERY_BROKER_URL = f"redis://redis:{os.getenv('REDIS_PORT')}/0"
-CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+if "pytest" in sys.argv[0]:
+    CELERY_BROKER_URL = "memory://"
+    CELERY_RESULT_BACKEND = "cache+memory://"
+else:
+    CELERY_BROKER_URL = f"redis://redis:{os.getenv('REDIS_PORT')}/0"
+    CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"

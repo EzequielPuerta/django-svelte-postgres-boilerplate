@@ -13,5 +13,10 @@
   // (porque Ruff es quien debe manejar F401)
   "python.analysis.diagnosticSeverityOverrides": {
     "reportUnusedImport": "none"
-  }
+  },
+  "python.testing.pytestArgs": [
+    "backend"
+  ],
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true
 }

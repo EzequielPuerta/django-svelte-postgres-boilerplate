@@ -5,6 +5,7 @@ build/
 dist/
 wheels/
 *.egg-info
+.ruff_cache/
 
 # Virtual environments
 .venv
@@ -26,13 +27,15 @@ Thumbs.db
 # Env
 .env
 .env.*
+frontend/.env
 !.env.example
-!.env.test
+!.env.test.example
 
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
 /browser_token
-/media
+media/
 logs
+.coverage

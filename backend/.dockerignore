@@ -5,6 +5,7 @@ __pycache__/
 *.db
 *.sqlite3
 .env
+.env.test
 .venv/
 .env/
 node_modules/

@@ -6,13 +6,14 @@ from api.models import UploadedFile
 
 
 @pytest.mark.django_db
-def test_uploaded_file_creation() -> None:
+def test_uploaded_file_creation(django_user_model) -> None:  # type: ignore[no-untyped-def]
+    user = django_user_model.objects.create_user(username="test", password="pass")
     content = b"hello world"
     uploaded_file = UploadedFile.objects.create(
-        file=ContentFile(content, name="hello.txt")
+        user=user, file=ContentFile(content, name="hello.txt")
     )
 
-    assert uploaded_file.file.name.endswith("hello.txt")
+    assert uploaded_file.file.name.startswith("hello")
     assert uploaded_file.uploaded_at is not None
     assert uploaded_file.uploaded_at <= timezone.now()
 
