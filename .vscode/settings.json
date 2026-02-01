@@ -1,22 +1,19 @@
 {
-  // Activa Ruff como linter
-  "ruff.enable": true,
-  "ruff.lineLength": 88,
+    // Activa Ruff como linter
+    "ruff.enable": true,
+    "ruff.lineLength": 88,
 
-  // Corre Ruff para aplicar fixes en onSave
-  "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit",
-    "source.organizeImports.ruff": "explicit"
-  },
+    // Corre Ruff para aplicar fixes en onSave
+    "editor.codeActionsOnSave": {
+      "source.organizeImports.ruff": "explicit"
+    },
 
-  // Opcional: desactivar warnings de imports no usados en Pylance
-  // (porque Ruff es quien debe manejar F401)
-  "python.analysis.diagnosticSeverityOverrides": {
-    "reportUnusedImport": "none"
-  },
-  "python.testing.pytestArgs": [
-    "backend"
-  ],
-  "python.testing.unittestEnabled": false,
-  "python.testing.pytestEnabled": true
+    // Opcional: desactivar warnings de imports no usados en Pylance
+    // (porque Ruff es quien debe manejar F401)
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportUnusedImport": "none"
+    },
+    "python.testing.pytestArgs": ["backend"],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
 }

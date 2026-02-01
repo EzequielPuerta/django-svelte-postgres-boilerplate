@@ -42,6 +42,7 @@ services:
       - ./backend/api:/app/api
       - ./backend/core:/app/core
       - ./backend/staticfiles:/app/staticfiles
+      - ./backend/templates:/app/templates
       - ./backend/entrypoint.sh:/app/entrypoint.sh
       - ./backend/manage.py:/app/manage.py
       - ./backend/pyproject.toml:/app/pyproject.toml
@@ -68,6 +69,7 @@ services:
       - ./backend/api:/app/api
       - ./backend/core:/app/core
       - ./backend/staticfiles:/app/staticfiles
+      - ./backend/templates:/app/templates
       - ./backend/entrypoint.sh:/app/entrypoint.sh
       - ./backend/manage.py:/app/manage.py
       - ./backend/pyproject.toml:/app/pyproject.toml
@@ -94,6 +96,7 @@ services:
       - ./backend/api:/app/api
       - ./backend/core:/app/core
       - ./backend/staticfiles:/app/staticfiles
+      - ./backend/templates:/app/templates
       - ./backend/entrypoint.sh:/app/entrypoint.sh
       - ./backend/manage.py:/app/manage.py
       - ./backend/pyproject.toml:/app/pyproject.toml

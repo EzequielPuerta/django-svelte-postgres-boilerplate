@@ -1,0 +1,33 @@
+{% extends "admin/change_list.html" %} {% block pagination %} {{ block.super }}
+
+<span>
+    <label>Ir a página:</label>
+    <input
+        type="number"
+        min="1"
+        id="goto-page"
+        onkeydown="
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                gotoPage();
+            }
+        "
+    />
+    <button class="button go-to-page-button" type="button" onclick="gotoPage()">
+        Ir
+    </button>
+</span>
+
+<script>
+    function gotoPage() {
+        const input = document.getElementById("goto-page");
+        const page = parseInt(input.value);
+
+        if (!page || page < 1) return;
+        const url = new URL(window.location.href);
+        url.searchParams.set("p", page);
+
+        window.location.href = url.toString();
+    }
+</script>
+{% endblock %}

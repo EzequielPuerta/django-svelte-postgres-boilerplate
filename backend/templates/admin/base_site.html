@@ -1,0 +1,10 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'admin/css/go_to_page_button.css' %}" />
+{% endblock %}
+
+{% block branding %}
+{% endblock %}
