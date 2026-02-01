@@ -56,11 +56,7 @@ if DEBUG:
 else:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "http")
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost",
-    "http://localhost:8000",
-    "http://localhost:5173",
-    "http://127.0.0.1",
-    "http://127.0.0.1:8000",
+    f"{proto}://{host}" for host in ALLOWED_HOSTS for proto in ("http", "https")
 ]
 CORS_ALLOW_ALL_ORIGINS = True
 
@@ -159,7 +155,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LANGUAGE_CODE = "es-ar"
-TIME_ZONE = "UTC"
+TIME_ZONE = "America/Argentina/Buenos_Aires"
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
