@@ -29,10 +29,11 @@ BASE_URL = os.getenv("BASE_URL", "http://localhost:8000")
 BASE_PORT = os.getenv("NGINX_PORT")
 
 
-import core.field_file_patch  # noqa: F401, E402, I001, RUF100
+import core.widgets.field_file_patch  # noqa: F401, E402, I001, RUF100
 
 
 INSTALLED_APPS = [
+    "core.apps.CoreConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

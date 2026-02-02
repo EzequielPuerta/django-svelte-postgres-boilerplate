@@ -3,8 +3,36 @@
 
 {% block extrahead %}
     {{ block.super }}
+    <link rel="icon" type="image/png" href="{% static 'admin/img/favicon.png' %}">
     <link rel="stylesheet" href="{% static 'admin/css/go_to_page_button.css' %}" />
+    <link rel="stylesheet" href="{% static 'admin/css/password_toggle.css' %}">
+
+    <style>
+    .logo-header-branding {
+        display: flex;
+        align-items: center;   /* centrado vertical */
+        gap: 10px;
+    }
+
+    .logo-header {
+        height: 36px;
+        width: auto;
+    }
+
+    .logo-header-branding #site-name {
+        margin: 0;
+        line-height: 1;       /* evita desalineación óptica */
+    }
+  </style>
 {% endblock %}
 
 {% block branding %}
+<a href="{% url 'admin:index' %}" class="logo-header-branding">
+  <img
+      src="{% static 'admin/img/favicon-alpha.png' %}"
+      alt="Logo"
+      class="logo-header"
+  >
+  <h1 id="site-name">Boilerplate</h1>
+</a>
 {% endblock %}

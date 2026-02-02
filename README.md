@@ -151,10 +151,11 @@ boilerplate
 |  |  |_ urls.py              # acceso al servicio mediante la api DRF
 |  |  |_ views.py             # vista del servicio en la api DRF
 |  |_ core
+|  |  |_ templates            # templates de los widgets
+|  |  |_ widgets              # widgets custom especiales
 |  |  |_ __init__.py          # configuración del servicio Celery
 |  |  |_ celery.py            # configuración del servicio Celery
 |  |  |_ compression.py       # utilidades usadas por la tarea async de compresión
-|  |  |_ field_file_patch.py  # patch para rutas relativas
 |  |  |_ logger_config.py     # configuración del loguru para handlear logs de logging
 |  |  |_ settings.py          # configuración general de Django
 |  |  |_ urls.py              # urls expuestas (Django Admin + Apps DRF)
