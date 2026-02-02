@@ -24,7 +24,9 @@ load_dotenv(BASE_DIR / ".env")
 setup_logging(BASE_DIR)
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "*").split(",")
+ALLOWED_HOSTS = [
+    h.strip() for h in os.getenv("DJANGO_ALLOWED_HOSTS", "").split(",") if h.strip()
+]
 BASE_URL = os.getenv("BASE_URL", "http://localhost:8000")
 BASE_PORT = os.getenv("NGINX_PORT")
 
@@ -57,9 +59,12 @@ if DEBUG:
 else:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "http")
 CSRF_TRUSTED_ORIGINS = [
-    f"{proto}://{host}" for host in ALLOWED_HOSTS for proto in ("http", "https")
+    f"{proto}://{host}{port}"
+    for host in ALLOWED_HOSTS
+    for proto in ("http", "https")
+    for port in ("", f":{BASE_PORT}")
 ]
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = DEBUG
 
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
@@ -92,6 +97,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
+    "core.middlewares.disable_csrf.DisableCSRFMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
